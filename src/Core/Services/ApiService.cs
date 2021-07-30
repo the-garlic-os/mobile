@@ -360,6 +360,12 @@ namespace Bit.Core.Services
                 HttpMethod.Post, "/two-factor/send-email-login", request, false, false);
         }
 
+        public Task<Fido2AuthenticationChallengeResponse> GetTwoFactorFido2AuthenticationChallengeAsync(TwoFactorFido2ChallengeRequest request)
+        {
+            return SendAsync<TwoFactorFido2ChallengeRequest, Fido2AuthenticationChallengeResponse>(
+                HttpMethod.Post, "/two-factor/get-fido2-auth-challenge", request, false, true);
+        }
+
         #endregion
 
         #region Device APIs
@@ -487,6 +493,9 @@ namespace Bit.Core.Services
                             Encoding.UTF8, "application/json");
                     }
                 }
+
+                // FIDO2 origin header
+                requestMessage.Headers.Add("Origin", "android:apk-key-hash:2jmj7l5rSw0yVb/vlWAYkK/YBwk");
 
                 if (authed)
                 {

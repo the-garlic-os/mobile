@@ -3512,24 +3512,100 @@ namespace Bit.App.Resources {
                 return ResourceManager.GetString("SendFileEmailVerificationRequired", resourceCulture);
             }
         }
-        public static string PasswordPrompt
-        {
-            get
-            {
+        
+        public static string PasswordPrompt {
+            get {
                 return ResourceManager.GetString("PasswordPrompt", resourceCulture);
             }
         }
-        public static string PasswordConfirmation
-        {
-            get
-            {
+        
+        public static string PasswordConfirmation {
+            get {
                 return ResourceManager.GetString("PasswordConfirmation", resourceCulture);
             }
-        }public static string PasswordConfirmationDesc
-        {
-            get
-            {
+        }
+        
+        public static string PasswordConfirmationDesc {
+            get {
                 return ResourceManager.GetString("PasswordConfirmationDesc", resourceCulture);
+            }
+        }
+        
+        public static string Fido2Title {
+            get {
+                return ResourceManager.GetString("Fido2Title", resourceCulture);
+            }
+        }
+        
+        public static string Fido2Instruction {
+            get {
+                return ResourceManager.GetString("Fido2Instruction", resourceCulture);
+            }
+        }
+        
+        public static string Fido2InstructionIos {
+            get {
+                return ResourceManager.GetString("Fido2InstructionIos", resourceCulture);
+            }
+        }
+        
+        public static string Fido2Desc {
+            get {
+                return ResourceManager.GetString("Fido2Desc", resourceCulture);
+            }
+        }
+        
+        public static string Fido2AbortError {
+            get {
+                return ResourceManager.GetString("Fido2AbortError", resourceCulture);
+            }
+        }
+        
+        public static string Fido2NetworkFail {
+            get {
+                return ResourceManager.GetString("Fido2NetworkFail", resourceCulture);
+            }
+        }
+        
+        public static string Fido2NoPermission {
+            get {
+                return ResourceManager.GetString("Fido2NoPermission", resourceCulture);
+            }
+        }
+        
+        public static string Fido2NotSupportedError {
+            get {
+                return ResourceManager.GetString("Fido2NotSupportedError", resourceCulture);
+            }
+        }
+        
+        public static string Fido2PrivacyError {
+            get {
+                return ResourceManager.GetString("Fido2PrivacyError", resourceCulture);
+            }
+        }
+        
+        public static string Fido2SecurityError {
+            get {
+                return ResourceManager.GetString("Fido2SecurityError", resourceCulture);
+            }
+        }
+        
+        public static string Fido2ServerDataFail {
+            get {
+                return ResourceManager.GetString("Fido2ServerDataFail", resourceCulture);
+            }
+        }
+        
+        public static string Fido2SomethingWentWrong {
+            get {
+                return ResourceManager.GetString("Fido2SomethingWentWrong", resourceCulture);
+            }
+        }
+        
+        public static string Fido2TimeoutError {
+            get {
+                return ResourceManager.GetString("Fido2TimeoutError", resourceCulture);
             }
         }
     }

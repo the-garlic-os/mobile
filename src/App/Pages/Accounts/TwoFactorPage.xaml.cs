@@ -75,6 +75,18 @@ namespace Bit.App.Pages
                         });
                     }
                 }
+                else if (message.Command == "gotFido2Token")
+                {
+                    var token = (string)message.Data;
+                    if (!string.IsNullOrWhiteSpace(token))
+                    {
+                        Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            _vm.Token = token;
+                            await _vm.SubmitAsync();
+                        });
+                    }
+                }
                 else if (message.Command == "resumeYubiKey")
                 {
                     if (_vm.YubikeyMethod)
@@ -172,7 +184,10 @@ namespace Bit.App.Pages
         {
             if (DoOnce())
             {
-                if (_vm.YubikeyMethod)
+                if (_vm.Fido2Method)
+                {
+                    _messagingService.Send("listenFido2TryAgain", true);
+                } else if (_vm.YubikeyMethod)
                 {
                     _messagingService.Send("listenYubiKeyOTP", true);
                 }

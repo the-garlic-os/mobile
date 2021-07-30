@@ -27,7 +27,6 @@ namespace Bit.App.Pages
         private readonly IBroadcasterService _broadcasterService;
         private readonly IStateService _stateService;
 
-        private bool _u2fSupported = false;
         private TwoFactorProviderType? _selectedProviderType;
         private string _totpInstruction;
         private string _webVaultUrl = "https://vault.bitwarden.com";
@@ -65,6 +64,8 @@ namespace Bit.App.Pages
         public bool DuoMethod => SelectedProviderType == TwoFactorProviderType.Duo ||
             SelectedProviderType == TwoFactorProviderType.OrganizationDuo;
 
+        public bool Fido2Method => SelectedProviderType == TwoFactorProviderType.Fido2WebAuthn;
+
         public bool YubikeyMethod => SelectedProviderType == TwoFactorProviderType.YubiKey;
 
         public bool AuthenticatorMethod => SelectedProviderType == TwoFactorProviderType.Authenticator;
@@ -73,7 +74,10 @@ namespace Bit.App.Pages
 
         public bool TotpMethod => AuthenticatorMethod || EmailMethod;
 
-        public bool ShowTryAgain => YubikeyMethod && Device.RuntimePlatform == Device.iOS;
+        public bool ShowTryAgain => YubikeyMethod && Device.RuntimePlatform == Device.iOS || Fido2Method;
+
+        public string Fido2Instruction => Device.RuntimePlatform == Device.iOS ? AppResources.Fido2InstructionIos :
+            AppResources.Fido2Instruction;
 
         public bool ShowContinue
         {
@@ -97,6 +101,7 @@ namespace Bit.App.Pages
             {
                 nameof(EmailMethod),
                 nameof(DuoMethod),
+                nameof(Fido2Method),
                 nameof(YubikeyMethod),
                 nameof(AuthenticatorMethod),
                 nameof(TotpMethod),
@@ -128,10 +133,7 @@ namespace Bit.App.Pages
                 _webVaultUrl = _environmentService.WebVaultUrl;
             }
 
-            // TODO: init U2F
-            _u2fSupported = false;
-
-            SelectedProviderType = _authService.GetDefaultTwoFactorProvider(_u2fSupported);
+            SelectedProviderType = _authService.GetDefaultTwoFactorProvider(_platformUtilsService.SupportsFido2());
             Load();
         }
 
@@ -147,8 +149,8 @@ namespace Bit.App.Pages
             var providerData = _authService.TwoFactorProvidersData[SelectedProviderType.Value];
             switch (SelectedProviderType.Value)
             {
-                case TwoFactorProviderType.U2f:
-                    // TODO
+                case TwoFactorProviderType.Fido2WebAuthn:
+                    _messagingService.Send("listenFido2", providerData);
                     break;
                 case TwoFactorProviderType.YubiKey:
                     _messagingService.Send("listenYubiKeyOTP", true);
@@ -183,7 +185,7 @@ namespace Bit.App.Pages
             {
                 _messagingService.Send("listenYubiKeyOTP", false);
             }
-            ShowContinue = !(SelectedProviderType == null || DuoMethod);
+            ShowContinue = !(SelectedProviderType == null || DuoMethod || Fido2Method);
         }
 
         public async Task SubmitAsync()

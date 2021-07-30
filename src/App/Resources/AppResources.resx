@@ -2000,4 +2000,45 @@
   <data name="PasswordConfirmationDesc" xml:space="preserve">
     <value>This action is protected, to continue please re-enter your master password to verify your identity.</value>
   </data>
+  <data name="Fido2Title" xml:space="preserve">
+    <value>FIDO2 WebAuthn</value>
+    <comment>"FIDO2 WebAuthn" should not be translated.</comment>
+  </data>
+  <data name="Fido2Instruction" xml:space="preserve">
+    <value>To continue, hold your FIDO2 WebAuthn enabled security key against the back of the device or insert it into your device's USB port, then touch its button.</value>
+  </data>
+  <data name="Fido2InstructionIos" xml:space="preserve">
+    <value>To continue, hold your FIDO2 WebAuthn enabled security key against the back of the device or insert it into your device's USB/lightning port, then touch its button.</value>
+  </data>
+  <data name="Fido2Desc" xml:space="preserve">
+    <value>Authentication using FIDO2 WebAuthn, you can authenticate using the mobile phone or external security key.</value>
+    <comment>"FIDO2 WebAuthn" should not be translated.</comment>
+  </data>
+  <data name="Fido2AbortError" xml:space="preserve">
+    <value>Aborted FIDO2 operation. Try again.</value>
+  </data>
+  <data name="Fido2NetworkFail" xml:space="preserve">
+    <value>No internet connection. Try again.</value>
+  </data>
+  <data name="Fido2NoPermission" xml:space="preserve">
+    <value>Permission was not given. Try again.</value>
+  </data>
+  <data name="Fido2NotSupportedError" xml:space="preserve">
+    <value>Unsupported device.</value>
+  </data>
+  <data name="Fido2PrivacyError" xml:space="preserve">
+    <value>Privacy issues encountered. Try again.</value>
+  </data>
+  <data name="Fido2SecurityError" xml:space="preserve">
+    <value>Security issues encountered.</value>
+  </data>
+  <data name="Fido2ServerDataFail" xml:space="preserve">
+    <value>The server returned invalid data. Try again.</value>
+  </data>
+  <data name="Fido2SomethingWentWrong" xml:space="preserve">
+    <value>Something Went Wrong. Try again.</value>
+  </data>
+  <data name="Fido2TimeoutError" xml:space="preserve">
+    <value>Timeout for FIDO2. Try again</value>
+  </data>
 </root>

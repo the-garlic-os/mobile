@@ -9,6 +9,7 @@ using Bit.Core.Utilities;
 using Bit.Core.Abstractions;
 using System.IO;
 using System;
+using System.Collections.Generic;
 using Android.Content;
 using Bit.Droid.Utilities;
 using Bit.Droid.Receivers;
@@ -17,7 +18,9 @@ using Bit.Core.Enums;
 using Android.Nfc;
 using Bit.App.Utilities;
 using System.Threading.Tasks;
+using Android.Util;
 using AndroidX.Core.Content;
+using Bit.Droid.Fido2System;
 using ZXing.Net.Mobile.Android;
 
 namespace Bit.Droid
@@ -42,7 +45,10 @@ namespace Bit.Droid
             @"text/*"
         })]
     [Register("com.x8bit.bitwarden.MainActivity")]
-    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity, 
+        Android.Gms.Tasks.IOnSuccessListener, 
+        Android.Gms.Tasks.IOnCompleteListener, 
+        Android.Gms.Tasks.IOnFailureListener
     {
         private IDeviceActionService _deviceActionService;
         private IMessagingService _messagingService;
@@ -112,6 +118,14 @@ namespace Bit.Droid
                 {
                     Xamarin.Forms.Device.BeginInvokeOnMainThread(() => Finish());
                 }
+                else if (message.Command == "listenFido2")
+                {
+                    ListenFido2((Dictionary<string, object>)message.Data);
+                }
+                else if (message.Command == "listenFido2TryAgain")
+                {
+                    ListenFido2();
+                }
                 else if (message.Command == "listenYubiKeyOTP")
                 {
                     ListenYubiKey((bool)message.Data);
@@ -129,6 +143,8 @@ namespace Bit.Droid
                     var task = ClearClipboardAlarmAsync(message.Data as Tuple<string, int?, bool>);
                 }
             });
+            
+            Fido2Service.INSTANCE.start(this);
         }
 
         protected override void OnPause()
@@ -258,12 +274,73 @@ namespace Bit.Droid
                     return;
                 }
             }
+            else if (resultCode == Result.Ok && 
+                     Enum.IsDefined(typeof(Fido2CodesTypes), requestCode))
+            {
+                Fido2Service.INSTANCE.OnActivityResult(requestCode, resultCode, data);
+            }
+        }
+
+        public void OnSuccess(Java.Lang.Object result)
+        {
+            Fido2Service.INSTANCE.OnSuccess(result);
+        }
+
+        public void OnComplete(Android.Gms.Tasks.Task task)
+        {
+            Fido2Service.INSTANCE.OnComplete(task);
+        }
+
+        public void OnFailure(Java.Lang.Exception e)
+        {
+            Fido2Service.INSTANCE.OnFailure(e);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
             _broadcasterService.Unsubscribe(_activityKey);
+        }
+
+        private string jsonData;
+        
+        private void ListenFido2(Dictionary<string, object> data = null)
+        {
+            if (!_deviceActionService.SupportsFido2())
+            {
+                return;
+            }
+            
+            RunOnUiThread(async () =>
+            {
+                try
+                {
+                    // If in the server the token receives the origin of this app this can be uncommented, for the token to be use
+                    // if the server doesn't receive the origin, then this must left commented, to be request a new FIDO2 data 
+                    // using the API Service that receives the origin and so that data is valid
+                    if (data != null)
+                    {
+                        jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+                        await Fido2Service.INSTANCE.SignInUserRequestAsync(jsonData);
+                    }
+                    else   
+                    {
+                        // in case the data is null or invalid, then the FIDO2 Service will request a new one
+                        // Request to FIDO2 Service to authenticate the user, using a new FIDO2 data, in
+                        // another words request a new FIDO2 data to the API Service
+                        await Fido2Service.INSTANCE.SignInUserRequestAsync(jsonData);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(Fido2Service._tag_log, e.Message);
+                }
+            });
+        }
+        
+        public void Fido2Submission(string token)
+        {
+            _messagingService.Send("gotFido2Token", token);
         }
 
         private void ListenYubiKey(bool listen)

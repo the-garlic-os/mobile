@@ -56,6 +56,7 @@ namespace Bit.Core.Abstractions
         Task PostAttachmentFileAsync(string id, string attachmentId, MultipartFormDataContent data);
         Task<List<BreachAccountResponse>> GetHibpBreachAsync(string username);
         Task PostTwoFactorEmailAsync(TwoFactorEmailRequest request);
+        Task<Fido2AuthenticationChallengeResponse> GetTwoFactorFido2AuthenticationChallengeAsync(TwoFactorFido2ChallengeRequest request);
         Task PutDeviceTokenAsync(string identifier, DeviceTokenRequest request);
         Task PostEventsCollectAsync(IEnumerable<EventRequest> request);
 

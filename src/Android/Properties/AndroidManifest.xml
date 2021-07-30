@@ -42,6 +42,7 @@
 
     <meta-data android:name="android.max_aspect" android:value="2.1" />
     <meta-data android:name="android.content.APP_RESTRICTIONS" android:resource="@xml/app_restrictions" />
+    <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
     <!-- Support for Samsung "Multi Window" mode (for Android < 7.0 users) -->
     <meta-data android:name="com.samsung.android.sdk.multiwindow.enable" android:value="true" />
